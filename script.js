@@ -132,7 +132,7 @@ const CheckIfGameOver = () => {
                   text: `Your Score is ${score},`
                 },
                 `Your Steps is ${steps}`,
-                `You Play ${90 - timer} Seconds`
+                `You Play ${70 - timer} Seconds`
               ]).then((result) => {
                 if (result.value) {
                   Swal.fire({
