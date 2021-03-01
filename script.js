@@ -4,6 +4,11 @@ const $dashboard = document.getElementById('dashboard'),
       $score = document.getElementById('score'),
       $board = document.getElementById('board'),
       $startButton = document.getElementById('start'),
+      $audio = document.getElementById('audio'),
+      soundsUrls = {
+          yes: 'sounds/yes.mp3',
+          no: 'sounds/no.mp3'
+      },
       cards = [
           {
               answer: '1',
@@ -60,7 +65,7 @@ const shuffle = (arrayOfItems) => {
 }
 
 const countTime = () => {
-    timer = 60;
+    timer = 70;
     timerInterval = setInterval(() => {
         --timer;
         $timer.innerText = timer;
@@ -91,9 +96,9 @@ const countSteps = () => {
 
 
 const calcScore = () => {
-    const rating3Limit = (cards.length / 2) + 3;
-    const rating2Limit = (cards.length);
-    const rating1Limit = (cards.length * 1.5);
+    const rating3Limit = (cards.length) + 1;
+    const rating2Limit = (cards.length) + 5;
+    const rating1Limit = (cards.length * 2) + 2;
 
     const is3Stars = steps <= rating3Limit;
     const is2Stars = steps > rating3Limit && steps < rating1Limit;
@@ -115,19 +120,33 @@ const CheckIfGameOver = () => {
     if ((cards.length * 2) === openCards) {
         clearInterval(timerInterval);
         setTimeout(() => {
-            swal.fire({
-                title: 'Welldone! You finish the Game',
-                text: `Your Score is ${score}, Your Steps is ${steps}, Your Timer left ${timer} Seconds`,
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'Do you want Play Again?',
+            Swal.mixin({
                 background: '#292929',
-                confirmButtonColor: '#3f3f3f'
-            }).then((result) => {
-                if(result.isConfirmed) {
-                    startGame();
+                confirmButtonColor: '#3f3f3f',
+                confirmButtonText: 'Next &rarr;',
+                showCancelButton: false,
+                progressSteps: ['1', '2', '3']
+              }).queue([
+                {
+                  title: 'score',
+                  text: `Your Score is ${score},`
+                },
+                `Your Steps is ${steps}`,
+                `You Play ${90 - timer} Seconds`
+              ]).then((result) => {
+                if (result.value) {
+                  Swal.fire({
+                    background: '#292929',
+                    confirmButtonColor: '#3f3f3f',
+                    title: 'Do you want Play Again?',
+                    confirmButtonText: 'Yes!'
+                  }).then((result) => {
+                    if(result.isConfirmed) {
+                        startGame();
+                    }
+                  })
                 }
-            })
+              })
         }, 800)
     }
 }
@@ -173,8 +192,12 @@ const flipCards = (isCorrect) => {
         flippedCards.forEach(card => {
 
             if(isCorrect) { 
-                card.classList.replace('flip', 'open'); 
+                $audio.src = soundsUrls.yes;
+                $audio.play();
+                card.classList.replace('flip', 'open');
             } else {
+                $audio.src = soundsUrls.no;
+                $audio.play();
                 card.classList.remove('flip');
             }
         });
@@ -182,6 +205,11 @@ const flipCards = (isCorrect) => {
         checkGameState();
     }, 800)   
 }
+
+$startButton.addEventListener('click', () => {
+    startGame();
+    $startButton.classList.add('hide');
+})
 
 $board.addEventListener('click', ($event) => {
     isCard = $event.target.localName === 'li';
@@ -202,7 +230,4 @@ $board.addEventListener('click', ($event) => {
     }
 })
 
-$startButton.addEventListener('click', () => {
-    startGame();
-    $startButton.classList.add('hide');
-})
+

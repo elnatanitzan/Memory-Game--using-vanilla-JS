@@ -7,12 +7,12 @@
     <title>Memory Game</title>
     <base href=".">
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
     <script async src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <link href="//cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script async src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
 </head>
 <body>
-    <audio src=""></audio>
+    <audio id="audio" src=""></audio>
     <div id="game-container">
         <header>
             <h1>Memory Game</h1>
@@ -23,7 +23,7 @@
             </ul>
         </header>
         <ul id="board"></ul>
-        <button id="start" class="start">Start Game</button>
+        <button id="start">Start Game</button>
     </div>
 </body>
 </html>
